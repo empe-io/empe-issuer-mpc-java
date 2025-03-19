@@ -30,11 +30,11 @@ public class CredentialIssuingService {
                 .build();
     }
 
-    @Tool(description = "Create a credential offering")
+    @Tool(description = "Create a credential offering with flexible recipient options. This is the foundational method that can create both targeted (specific recipient) and open (anyone can claim) offerings. Most use cases should use the specialized createTargetedOffering or createOpenOffering methods instead.")
     public Map<String, Object> createOffering(
-            @ToolParam(description = "credential_type") String type,
-            @ToolParam(description = "Credential subject data as a map") Map<String, Object> credentialSubject,
-            @ToolParam(description = "Optional recipient DID for targeted offerings") Optional<String> recipientDid) {
+            @ToolParam(description = "The type of credential to offer, must match an existing schema type in the system. For example: 'ProofOfPurchase', 'EventTicket', 'MembershipCard'. Case-sensitive.") String type,
+            @ToolParam(description = "The actual data to include in the credential, structured as key-value pairs. Keys must match the properties defined in the schema. For example, an EventTicket might include: {'ticketId': 'T12345', 'eventName': 'Spring Conference', 'seat': 'A12'}") Map<String, Object> credentialSubject,
+            @ToolParam(description = "For targeted offerings, specify the recipient's DID (Decentralized Identifier). When provided, only the holder of this DID can claim the credential. For open offerings, leave this empty or null.") Optional<String> recipientDid) {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("credential_type", type);
@@ -50,81 +50,21 @@ public class CredentialIssuingService {
                 .body(Map.class);
     }
 
-    @Tool(description = "Create a targeted credential offering (with specified recipient)")
+    @Tool(description = "Create a credential offering for a specific recipient. Targeted offerings can only be claimed by the holder of the specified DID, ensuring the credential is issued to exactly the intended recipient. This is appropriate for credentials that represent personal attributes, memberships, or specific authorizations.")
     public Map<String, Object> createTargetedOffering(
-            @ToolParam(description = "Credential type (must match a schema type)") String type,
-            @ToolParam(description = "Credential subject data as a map") Map<String, Object> credentialSubject,
-            @ToolParam(description = "Recipient DID") String recipientDid) {
+            @ToolParam(description = "The type of credential to offer, must match an existing schema type in the system. For example: 'ProofOfPurchase', 'IdentityCredential', 'MembershipCard'. Case-sensitive.") String type,
+            @ToolParam(description = "The actual data to include in the credential, structured as key-value pairs. Keys must match the properties defined in the schema. Example: {'name': 'John Doe', 'membershipLevel': 'Premium', 'memberSince': '2023-01-15'}") Map<String, Object> credentialSubject,
+            @ToolParam(description = "The Decentralized Identifier (DID) of the intended recipient. Only the wallet that can prove ownership of this DID will be able to claim the credential. Format example: 'did:empe:testnet:123abc456def'") String recipientDid) {
 
         return createOffering(type, credentialSubject, Optional.of(recipientDid));
     }
 
-    @Tool(description = "Create an open credential offering (available to anyone)")
+    @Tool(description = "Create an open credential offering that anyone can claim by scanning its QR code. Open offerings are ideal for general-purpose credentials like event attendance proofs, promotional coupons, or public certificates that don't need to be restricted to specific individuals.")
     public Map<String, Object> createOpenOffering(
-            @ToolParam(description = "Credential type (must match a schema type)") String type,
-            @ToolParam(description = "Credential subject data as a map") Map<String, Object> credentialSubject) {
+            @ToolParam(description = "The type of credential to offer, must match an existing schema type in the system. Appropriate types for open offerings include: 'EventAttendance', 'PromotionalCoupon', 'PublicCertificate'. Case-sensitive.") String type,
+            @ToolParam(description = "The actual data to include in the credential, structured as key-value pairs. Keys must match the properties defined in the schema. Example for an event attendance: {'eventName': 'Tech Conference 2025', 'location': 'San Francisco', 'date': '2025-06-15'}") Map<String, Object> credentialSubject) {
 
         return createOffering(type, credentialSubject, Optional.empty());
     }
 
-    @Tool(description = "Initiate DID authentication")
-    public Map<String, Object> initiateDIDAuthentication(
-            @ToolParam(description = "Recipient DID to authenticate") String recipientDid) {
-
-        Map<String, Object> requestBody = Map.of(
-                "did", recipientDid
-        );
-
-        return restClient.post()
-                .uri("/api/v1/authorize")
-                .header("x-client-secret", clientSecret)
-                .body(requestBody)
-                .retrieve()
-                .body(Map.class);
-    }
-
-    @Tool(description = "Verify DID authentication")
-    public Map<String, Object> verifyDIDAuthentication(
-            @ToolParam(description = "Challenge from initiate step") String challenge,
-            @ToolParam(description = "Signed challenge response") String signedChallenge) {
-
-        Map<String, Object> requestBody = Map.of(
-                "challenge", challenge,
-                "signedChallenge", signedChallenge
-        );
-
-        return restClient.post()
-                .uri("/api/v1/authorize/verify")
-                .header("x-client-secret", clientSecret)
-                .body(requestBody)
-                .retrieve()
-                .body(Map.class);
-    }
-
-    @Tool(description = "Exchange authorization code for access token")
-    public Map<String, Object> exchangeToken(
-            @ToolParam(description = "Authorization code from verification step") String authorizationCode) {
-
-        Map<String, Object> requestBody = Map.of(
-                "authorization_code", authorizationCode
-        );
-
-        return restClient.post()
-                .uri("/api/v1/connect/token")
-                .body(requestBody)
-                .retrieve()
-                .body(Map.class);
-    }
-
-    @Tool(description = "Issue credential (requires access token)")
-    public Map<String, Object> issueCredential(
-            @ToolParam(description = "Offering ID") String offeringId,
-            @ToolParam(description = "Access token from token exchange") String accessToken) {
-
-        return restClient.post()
-                .uri("/api/v1/issue-credential/{id}", offeringId)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .retrieve()
-                .body(Map.class);
-    }
-}
+  }

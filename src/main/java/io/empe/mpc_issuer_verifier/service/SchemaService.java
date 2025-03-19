@@ -29,12 +29,12 @@ public class SchemaService {
                 .build();
     }
 
-    @Tool(description = "Create a new credential schema")
+    @Tool(description = "Create a new credential schema. Schemas define the structure and attributes of Verifiable Credentials in the SSI ecosystem. Each schema has a type, name, and defines the properties a credential can contain.")
     public Map<String, Object> createSchema(
-            @ToolParam(description = "Schema name") String name,
-            @ToolParam(description = "Schema type") String type,
-            @ToolParam(description = "Schema properties as JSON") Map<String, Object> properties,
-            @ToolParam(description = "Required fields (array of field names)") List<String> requiredFields) {
+            @ToolParam(description = "Human-readable name of the schema (e.g., 'ProofOfPurchase', 'IdentityCredential', 'EventTicket'). This should be clear and descriptive.") String name,
+            @ToolParam(description = "Unique identifier for this schema type. Often matches the name but serves as the technical reference. Used when creating credential offerings.") String type,
+            @ToolParam(description = "JSON map defining the schema properties. Each property should be a key-value pair where the key is the property name and the value is a map containing 'type' (string, number, boolean), 'title' (human-readable name), and optionally 'description' and 'format'. Example: {'ticketId': {'type': 'string', 'title': 'Ticket ID'}}") Map<String, Object> properties,
+            @ToolParam(description = "List of field names that are mandatory in credentials using this schema. These must be keys that exist in the properties map. Example: ['name', 'issuanceDate']") List<String> requiredFields) {
 
         // Construct the schema structure based on API requirements
         Map<String, Object> credentialSubject = Map.of(
@@ -57,7 +57,7 @@ public class SchemaService {
                 .body(Map.class);
     }
 
-    @Tool(description = "Get all schemas")
+    @Tool(description = "Retrieve all credential schemas available in the system. Returns a list of schema summaries including ID, name, type, version, and URI. Use this to explore existing schemas before creating new ones or when needing a schema ID for other operations.")
     public List<Map<String, Object>> getAllSchemas() {
         return restClient.get()
                 .uri("/api/v1/schema")
@@ -65,18 +65,18 @@ public class SchemaService {
                 .body(List.class);
     }
 
-    @Tool(description = "Get schema by ID")
+    @Tool(description = "Retrieve detailed information about a specific schema by its unique identifier. Returns the complete schema definition including all properties and metadata.")
     public Map<String, Object> getSchemaById(
-            @ToolParam(description = "Schema ID") String id) {
+            @ToolParam(description = "Unique identifier (UUID) of the schema to retrieve. This is the 'id' field returned when creating a schema or listing all schemas. Format example: 'db5a33ae-2eef-41b4-9c74-2ed16c4bb4f4'") String id) {
         return restClient.get()
                 .uri("/api/v1/schema/{id}", id)
                 .retrieve()
                 .body(Map.class);
     }
 
-    @Tool(description = "Delete schema by ID")
+    @Tool(description = "Permanently delete a schema from the system. This operation cannot be undone. Note that deleting a schema will not affect credentials already issued using this schema.")
     public void deleteSchema(
-            @ToolParam(description = "Schema ID") String id) {
+            @ToolParam(description = "Unique identifier (UUID) of the schema to delete. This is the 'id' field returned when creating a schema or listing all schemas. Format example: 'db5a33ae-2eef-41b4-9c74-2ed16c4bb4f4'") String id) {
         restClient.delete()
                 .uri("/api/v1/schema/{id}", id)
                 .header("x-client-secret", clientSecret)
@@ -84,17 +84,17 @@ public class SchemaService {
                 .toBodilessEntity();
     }
 
-    @Tool(description = "Check if schema exists by type")
+    @Tool(description = "Check if a schema with a specific type already exists in the system. Returns true if at least one schema with the specified type exists, false otherwise. Useful before creating new schemas to avoid duplication.")
     public boolean schemaExistsByType(
-            @ToolParam(description = "Schema type") String type) {
+            @ToolParam(description = "The schema type to check for existence. This is the unique identifier used when referencing the schema type in credential offerings. Case-sensitive.") String type) {
         List<Map<String, Object>> schemas = getAllSchemas();
         return schemas.stream()
                 .anyMatch(schema -> type.equals(schema.get("type")));
     }
 
-    @Tool(description = "Get latest schema version by type")
+    @Tool(description = "Retrieve the most recent version of a schema by its type. When schemas evolve over time, new versions are created. This tool fetches the schema with the highest version number for a given type.")
     public Map<String, Object> getLatestSchemaByType(
-            @ToolParam(description = "Schema type") String type) {
+            @ToolParam(description = "The schema type to search for. This returns the schema with the highest version number that matches this type. Case-sensitive.") String type) {
         List<Map<String, Object>> schemas = getAllSchemas();
         return schemas.stream()
                 .filter(schema -> type.equals(schema.get("type")))

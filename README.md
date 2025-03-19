@@ -113,51 +113,139 @@ const response = await client.messages.create({
 
 ## Available AI Tools
 
-The MCP server exposes the following tools to AI models:
+The MCP server exposes the following tools to AI models with detailed descriptions to guide appropriate use:
 
-### Schema Management
-- **createSchema**: Create a new credential schema
-- **getAllSchemas**: Retrieve all schemas
-- **getSchemaById**: Get a specific schema by ID
-- **deleteSchema**: Delete a schema
-- **schemaExistsByType**: Check if a schema exists by type
-- **getLatestSchemaByType**: Get the latest version of a schema by type
+### Schema Management Tools
 
-### Credential Issuance
-- **createTargetedOffering**: Create a credential offering for a specific recipient
-- **createOpenOffering**: Create a credential offering available to anyone
-- **issueCredential**: Issue a credential using an access token
+#### createSchema
+Creates a new credential schema defining the structure for verifiable credentials.
+
+**Parameters:**
+- **name**: Human-readable name (e.g., 'ProofOfPurchase', 'IdentityCredential')
+- **type**: Unique identifier for this schema type, used when creating offerings
+- **properties**: JSON map defining schema properties with their types and descriptions
+- **requiredFields**: List of mandatory fields that must be included in credentials
+
+#### getAllSchemas
+Retrieves all credential schemas in the system.
+
+#### getSchemaById
+Fetches a specific schema by its unique identifier (UUID).
+
+**Parameters:**
+- **id**: UUID of the schema to retrieve (e.g., 'db5a33ae-2eef-41b4-9c74-2ed16c4bb4f4')
+
+#### deleteSchema
+Permanently removes a schema from the system.
+
+**Parameters:**
+- **id**: UUID of the schema to delete
+
+#### schemaExistsByType
+Checks if a schema with the specified type already exists.
+
+**Parameters:**
+- **type**: Schema type to check (case-sensitive)
+
+#### getLatestSchemaByType
+Retrieves the most recent version of a schema by its type.
+
+**Parameters:**
+- **type**: Schema type to search for (case-sensitive)
+
+### Credential Issuance Tools
+
+#### createTargetedOffering
+Creates a credential offering for a specific recipient DID.
+
+**Parameters:**
+- **type**: Type of credential to offer (must match an existing schema)
+- **credentialSubject**: Data to include in the credential as key-value pairs
+- **recipientDid**: DID of the intended recipient (e.g., 'did:empe:testnet:123abc456def')
+
+#### createOpenOffering
+Creates an open credential offering that anyone can claim.
+
+**Parameters:**
+- **type**: Type of credential to offer (must match an existing schema)
+- **credentialSubject**: Data to include in the credential as key-value pairs
 
 ## Example AI Interactions
 
-When connected to an AI assistant, users can issue natural language requests that trigger tool calls:
+### Example 1: Creating a Schema and Offering a Credential
 
-**User**: "Create a ticket credential for the Spring Conference with seat A12."
+**User**: "Create a membership credential for our premium members."
 
-**AI's Tool Call**:
-```json
-{
-  "name": "createOpenOffering",
-  "parameters": {
-    "type": "EventTicket",
-    "credentialSubject": {
-      "ticketId": "T12345",
-      "eventName": "Spring Conference 2025",
-      "seat": "A12"
-    }
-  }
-}
-```
+**AI Processing**:
+1. First, check if a suitable schema exists:
+   ```json
+   {
+     "name": "schemaExistsByType",
+     "parameters": {
+       "type": "MembershipCredential"
+     }
+   }
+   ```
 
-**User**: "Show me all available credential schemas."
+2. If no schema exists, create one:
+   ```json
+   {
+     "name": "createSchema",
+     "parameters": {
+       "name": "MembershipCredential",
+       "type": "MembershipCredential",
+       "properties": {
+         "memberName": {
+           "type": "string",
+           "title": "Member Name"
+         },
+         "membershipLevel": {
+           "type": "string", 
+           "title": "Membership Level"
+         },
+         "validUntil": {
+           "type": "string",
+           "title": "Valid Until",
+           "format": "date"
+         }
+       },
+       "requiredFields": ["memberName", "membershipLevel", "validUntil"]
+     }
+   }
+   ```
 
-**AI's Tool Call**:
+3. Create a credential offering:
+   ```json
+   {
+     "name": "createOpenOffering",
+     "parameters": {
+       "type": "MembershipCredential",
+       "credentialSubject": {
+         "memberName": "Jane Smith",
+         "membershipLevel": "Premium",
+         "validUntil": "2026-03-19"
+       }
+     }
+   }
+   ```
+
+### Example 2: Retrieving Schema Information
+
+**User**: "What credential types do we currently support?"
+
+**AI Processing**:
 ```json
 {
   "name": "getAllSchemas",
   "parameters": {}
 }
 ```
+
+The AI would then process the results to provide a human-readable summary:
+"We currently support the following credential types:
+1. MembershipCredential (2 versions)
+2. EventTicket 
+3. ProofOfPurchase"
 
 ## Future Enhancements
 
