@@ -1,6 +1,16 @@
-# MCP Server for SSI Issuer Service
+# EVDI - Enhanced Verifiable Digital Identity
 
-## Overview
+## Introduction
+
+EVDI (Enhanced Verifiable Digital Identity) is a comprehensive infrastructure for managing digital identity and credentials in AI agent ecosystems. This project provides a secure, decentralized framework that enables AI agents to establish, manage, and verify their identities while interacting with other agents and systems.
+
+For more information about the EVDI project, visit our [documentation](https://docs.empe.io/evdi/intro).
+
+This repository contains the MCP (Model Context Protocol) Server for the SSI Issuer Service, which is the first component of the broader EVDI ecosystem. Future components will include credential verification capabilities, agent-to-agent authentication, and self-sovereign identity management for AI agents.
+
+## MCP Server for SSI Issuer Service
+
+### Overview
 
 This project implements a Model Context Protocol (MCP) server that acts as an adapter between AI models and the EMPE Issuer Service within the Self-Sovereign Identity (SSI) ecosystem. Built on Spring Boot and Spring AI's MCP server capabilities, it allows AI assistants to interact with Issuer Service functionality through well-defined tools, enabling AI-driven credential management workflows.
 
@@ -27,6 +37,29 @@ This MCP server exposes Issuer Service functionality as tools that can be called
 - **Schema Management Tools**: Capabilities for creating and managing credential schemas
 - **Credential Issuance Tools**: Functions for generating and issuing verifiable credentials
 - **Issuer Service Client**: Handles communication with the underlying Issuer Service API
+
+## Future Capabilities
+
+The EVDI ecosystem is continuously evolving with planned features including:
+
+1. **Credential Verification**: Tools for verifying credentials presented by agents
+2. **Agent Identity Management**: Enabling AI agents to manage their own identities with DIDs
+3. **Credential Storage**: Allowing agents to collect and store their own credentials
+4. **Selective Disclosure**: Enabling agents to share specific credential attributes without revealing all information
+5. **Agent-to-Agent Authentication**: Secure authentication mechanisms between AI agents using DIDs
+
+## Accessing the Issuer Service
+
+### One-Click Portal
+We provide a one-click portal where you can easily deploy your own instance of the Issuer or Verifier service. The link to this portal will be available soon.
+
+### Demo Environment
+For testing purposes, we provide a demo environment at:
+```
+https://mcp-demo-issuer.evdi.app
+```
+
+Note: Access to the demo environment requires an access code which is not included in this README for security reasons. The access code will be provided through secure channels to authorized users.
 
 ## Setting Up the MCP Server
 
@@ -246,11 +279,3 @@ The AI would then process the results to provide a human-readable summary:
 1. MembershipCredential (2 versions)
 2. EventTicket 
 3. ProofOfPurchase"
-
-## Future Enhancements
-
-- **Improved AI Prompting**: Enhanced documentation to guide AI models in making appropriate tool calls
-- **Conversational State Management**: Remember context across multiple tool calls in a conversation
-- **Credential Revocation Tools**: Add capabilities for managing credential lifecycle
-- **Multi-Issuer Support**: Allow a single MCP server to connect to multiple issuer services
-- **Advanced Authentication Flows**: Support for more complex wallet interaction patterns
