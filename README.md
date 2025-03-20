@@ -1,8 +1,8 @@
-# EVDI - Enhanced Verifiable Digital Identity
+# EVDI - End-to-End Verifiable Digital Identity
 
 ## Introduction
 
-EVDI (Enhanced Verifiable Digital Identity) is a comprehensive infrastructure for managing digital identity and credentials in AI agent ecosystems. This project provides a secure, decentralized framework that enables AI agents to establish, manage, and verify their identities while interacting with other agents and systems.
+End-to-End Verifiable Data Infrastructure (EVDI) is a comprehensive infrastructure for managing digital identity and credentials in AI agent ecosystems. This project provides a secure, decentralized framework that enables AI agents to establish, manage, and verify their identities while interacting with other agents and systems.
 
 For more information about the EVDI project, visit our [documentation](https://docs.empe.io/evdi/intro).
 
@@ -51,7 +51,7 @@ The EVDI ecosystem is continuously evolving with planned features including:
 ## Accessing the Issuer Service
 
 ### One-Click Portal
-We provide a one-click portal where you can easily deploy your own instance of the Issuer or Verifier service. The link to this portal will be available soon.
+We provide a one-click portal where you can easily deploy your own instance of the Issuer or Verifier service. You can access the portal at <https://oneclick.empe.io/>.
 
 ### Demo Environment
 For testing purposes, we provide a demo environment at:
@@ -59,7 +59,7 @@ For testing purposes, we provide a demo environment at:
 https://mcp-demo-issuer.evdi.app
 ```
 
-Note: Access to the demo environment requires an access code which is not included in this README for security reasons. The access code will be provided through secure channels to authorized users.
+Note: Access to the demo environment requires an access code which is not included in this README for security reasons. The access code will be provided through secure channels to interested users.
 
 ## Setting Up the MCP Server
 
