@@ -1,12 +1,51 @@
-# EVDI - End-to-End Verifiable Digital Identity
+# AI Agent Identity and Verifiable Data
 
 ## Introduction
 
-End-to-End Verifiable Data Infrastructure (EVDI) is a comprehensive infrastructure for managing digital identity and credentials in AI agent ecosystems. This project provides a secure, decentralized framework that enables AI agents to establish, manage, and verify their identities while interacting with other agents and systems.
+End-to-End Verifiable Data Infrastructure (EVDI) is a comprehensive infrastructure for managing digital identity and credentials in AI agent ecosystems. EVDI provides a secure, decentralized framework that enables AI agents to establish, manage, and verify their identities while interacting with other agents, humans and systems.
 
-For more information about the EVDI project, visit our [documentation](https://docs.empe.io/evdi/intro).
+### What is Self-Sovereign Identity (SSI)?
 
-This repository contains the MCP (Model Context Protocol) Server for the SSI Issuer Service, which is the first component of the broader EVDI ecosystem. Future components will include credential verification capabilities, agent-to-agent authentication, and self-sovereign identity management for AI agents.
+Self-Sovereign Identity (SSI) is a model for digital identity management that gives individuals (and in our case, AI agents) control over their own identities and data. Unlike traditional centralized identity systems where a single authority controls and verifies identities, SSI allows entities to:
+
+1. **Own their identity**: Control their digital presence without depending on any central authority
+2. **Manage their credentials**: Store and share verifiable credentials as needed
+3. **Prove claims**: Demonstrate attributes about themselves without revealing unnecessary information
+4. **Establish trust**: Create trusted connections with other entities in a decentralized manner
+
+### The Role of Issuers and Verifiers
+
+In the SSI ecosystem, there are three key roles:
+
+- **Issuers**: Entities that create and sign verifiable credentials (e.g., a university issuing a degree)
+- **Holders**: Entities that receive and store credentials (e.g., an AI agent storing its capabilities)
+- **Verifiers**: Entities that request and verify credentials (e.g., a service checking an agent's authorization)
+
+This repository focuses on the **Issuer** component, which allows trusted authorities to create and issue verifiable credentials to AI agents or other entities.
+
+### Why EVDI Matters for AI Agents
+
+As AI systems become more autonomous and interact with various entities, they need secure ways to:
+
+- Prove their identity and capabilities
+- Establish trust with humans, other AI agents, and external systems
+- Share verifiable information without compromising security
+- Maintain privacy while engaging in complex interactions
+
+EVDI enables these capabilities through cryptographically secure, tamper-evident credentials that can be verified without contacting the original issuer.
+
+### Scope of Interactions
+
+The interactions enabled by EVDI are not limited to agent-to-agent communications. They extend to:
+
+- **Agent-to-Human**: AI agents can present and issue verifiable credentials to humans
+- **Agent-to-System**: AI agents can authenticate with external systems using their credentials
+- **Human-to-Agent**: Humans can present credentials to AI systems
+- **System-to-Agent**: External systems can issue credentials to AI agents
+
+For more information, visit our [documentation](https://docs.empe.io/evdi/intro).
+
+This repository contains the MCP (Model Context Protocol) Server for the Empe Self-Sovereign Identity Issuer Service, which is the first component of the broader EVDI ecosystem. Future components will include credential verification capabilities, agent-to-agent authentication, and self-sovereign identity management for AI agents.
 
 ## MCP Server for SSI Issuer Service
 
