@@ -1,0 +1,11 @@
+{
+  "empe-java": {
+    "command": "java",
+    "args": [
+      "-jar", 
+      "/ścieżka/do/twojej/aplikacji.jar",
+      "--issuer.api.base-url=https://twój-url-mcp.com",
+      "--issuer.api.client-secret=twój-klucz-api"
+    ]
+  }
+}
