@@ -17,7 +17,7 @@ Self-Sovereign Identity (SSI) is a model for digital identity management that gi
 
 In the SSI ecosystem, there are three key roles:
 
-- **Issuers**: Entities that create and sign verifiable credentials (e.g., a university issuing a degree)
+- **Issuers**: Entities that create and sign verifiable credentials (e.g., AI agent attesting user's skills after performing the interview)
 - **Holders**: Entities that receive and store credentials (e.g., an AI agent storing its capabilities)
 - **Verifiers**: Entities that request and verify credentials (e.g., a service checking an agent's authorization)
 
